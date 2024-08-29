@@ -16,6 +16,8 @@ import re
 import os
 from PyQt5.QtGui import QColor
 
+# 테스트
+#####################################################################################################################
 # 고정된 값 : 매출, 인건비, 공과금(전기세, 수도세, 가스비), 임차료, 재료비(자재비)
 # 보험, 고용보험, 산재보험
 
@@ -315,9 +317,11 @@ def save_to_pdf():
         c.drawString(100, y_position, line)
         y_position -= 20
 
+    # PDF 저장
     save_path = "store_info.pdf"
     c.save()
 
+    #저장 완료 메시지 표시
     if os.path.exists(save_path):
         msg_box = QMessageBox()
         msg_box.setWindowTitle("저장 완료")
@@ -365,23 +369,30 @@ def on_store_select(item):
         inFile = csv.reader(file)
         comList = list(inFile)
 
-        # 속성들을 리스트로 묶기
-        attributes = [
-            'totalSales', 'ingredients', 'totalLabor', 'expendables',
-            'rentInterest', 'rentFee', 'utilities', 'donation'
-        ]
-
-        # 첫 번째 열 설정
-        for i, attr in enumerate(attributes):
-            item = QTableWidgetItem(str(getattr(myStoreList[targetIndex], attr)))
+        for i in range(8):
+            if i == 0:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].totalSales))
+            elif i == 1:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].ingredients))
+            elif i == 2:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].totalLabor))
+            elif i == 3:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].expendables))
+            elif i == 4:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].rentInterest))
+            elif i == 5:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].rentFee))
+            elif i == 6:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].utilities))
+            elif i == 7:
+                item = QTableWidgetItem(str(myStoreList[targetIndex].donation))
+            
             annual_center_table.setItem(i, 0, item)
 
-        # 나머지 열 설정
-        selected_row = annual_left_table.currentRow()  # 왼쪽 테이블의 행 번호를 가져오기
-        for j in range(1, 9):
-            value = comList[selected_row][j]
-            annual_center_table.setItem(j-1, 1, QTableWidgetItem(str(value)))
-
+            for j in range(1,9) :
+                selected_row = annual_left_table.currentRow()  # 왼쪽 테이블의 행 번호를 가져오기
+                value = comList[selected_row][j]
+                annual_center_table.setItem(j-1,1,QTableWidgetItem(str(value)))
 
         for m in range(8): 
             firstItem = annual_center_table.item(m, 0).text()
@@ -447,28 +458,34 @@ def on_store_select(item):
     ## 여기에서 어드바이스정보 보여주기
     # 오른쪽 프레임 하단에 라벨 추가
     global annual_bottom_label1, annual_bottom_label2, annual_bottom_label3, annual_bottom_label4, annual_button_btn
-    # 라벨에 사용할 메서드 리스트
-    label_methods = [
-        'tax_saving_advice', 
-        'check_consumable_expenses_deduction', 
-        'check_charitable_donation_deduction', 
-        'check_mortgage_interest_deduction'
-    ]
+    annual_bottom_label1 = QLabel()
+    annual_bottom_label1.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+    annual_bottom_label1.setText(str(myStoreList[targetIndex].tax_saving_advice()))
+    annual_bottom_label1.setEnabled(False)
+    annual_right_layout.addWidget(annual_bottom_label1)
 
-    # QLabel 생성 및 설정
-    for method in label_methods:
-        label = QLabel()
-        label.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        label.setText(str(getattr(myStoreList[targetIndex], method)()))
-        label.setEnabled(False)
-        annual_right_layout.addWidget(label)
+    annual_bottom_label2 = QLabel()
+    annual_bottom_label2.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+    annual_bottom_label2.setText(str(myStoreList[targetIndex].check_consumable_expenses_deduction()))
+    annual_bottom_label2.setEnabled(False)
+    annual_right_layout.addWidget(annual_bottom_label2)
 
-    # 버튼 생성 및 설정
+    annual_bottom_label3 = QLabel()
+    annual_bottom_label3.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+    annual_bottom_label3.setText(str(myStoreList[targetIndex].check_charitable_donation_deduction()))
+    annual_bottom_label3.setEnabled(False)
+    annual_right_layout.addWidget(annual_bottom_label3)
+
+    annual_bottom_label4 = QLabel()
+    annual_bottom_label4.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+    annual_bottom_label4.setText(str(myStoreList[targetIndex].check_mortgage_interest_deduction()))
+    annual_bottom_label4.setEnabled(False)
+    annual_right_layout.addWidget(annual_bottom_label4)
+
     annual_button_btn = QPushButton("PDF로 저장")
     annual_button_btn.setEnabled(True)
     annual_button_btn.clicked.connect(save_to_pdf)
     annual_right_layout.addWidget(annual_button_btn)
-
 
 def private_store_select(item2):
     global private_center_frame, private_center_innerFrameList
