@@ -33,7 +33,7 @@
    * Login functionality for individual store accounts not implemented  
 6. **Tax-saving Suggestions** (Completed)  
    * Recommends simple tax-saving strategies based on the calculated tax status  
-7. **Save Results as PDF**   
+7. **Save Results as PDF**  (Completed)
    * When the “Save as PDF” button is clicked, the results displayed on the screen can be saved as a PDF  
 8. **Tax Advisor Advertising** (Completed)  
    * Displays 3 different tax advisor advertisements in rotation  
